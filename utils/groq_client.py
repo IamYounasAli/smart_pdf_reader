@@ -32,7 +32,7 @@ Context provided by user: {description}"""
     user_prompt = f"{prompts.get(mode, prompts['summary']).format(description=user_description)}\n\n--- DOCUMENT CONTENT ---\n{text[:25000]}"
     
     response = client.chat.completions.create(
-        model="llama3-70b-8192",
+        model="openai/gpt-oss-120b",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
