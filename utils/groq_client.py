@@ -2,21 +2,17 @@ import os
 import streamlit as st
 from groq import Groq
 
-def get_groq_client(api_key: str = None) -> Groq:
-    # Check manual UI input -> Streamlit Secrets -> Local environment
-    key = (
-        api_key 
-        or st.secrets.get("GROQ_API_KEY") 
-        or os.environ.get("GROQ_API_KEY")
-    )
+def get_groq_client() -> Groq:
+    # Fetch from Streamlit Cloud Secrets or local environment variables
+    key = st.secrets.get("GROQ_API_KEY") or os.environ.get("GROQ_API_KEY")
     
     if not key:
-        raise ValueError("Groq API Key not found. Please add GROQ_API_KEY to Streamlit Secrets or sidebar.")
+        raise ValueError("GROQ_API_KEY is missing. Please add it to your Streamlit Cloud Secrets.")
         
     return Groq(api_key=key)
 
-def generate_analysis(text: str, user_description: str, mode: str, api_key: str = None) -> str:
-    client = get_groq_client(api_key)
+def generate_analysis(text: str, user_description: str, mode: str) -> str:
+    client = get_groq_client()
     
     prompts = {
         "summary": """Provide a comprehensive executive summary of the document below. 
@@ -36,7 +32,7 @@ Context provided by user: {description}"""
     user_prompt = f"{prompts.get(mode, prompts['summary']).format(description=user_description)}\n\n--- DOCUMENT CONTENT ---\n{text[:25000]}"
     
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b",
+        model="llama3-70b-8192",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
