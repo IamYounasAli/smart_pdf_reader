@@ -1,8 +1,8 @@
 import json
 from utils.groq_client import get_groq_client
 
-def generate_quiz(text: str, user_description: str, num_questions: int = 5, api_key: str = None) -> list:
-    client = get_groq_client(api_key)
+def generate_quiz(text: str, user_description: str, num_questions: int = 5) -> list:
+    client = get_groq_client()
     
     system_prompt = """You are an educational AI assistant that creates multiple-choice quizzes from text.
 You MUST output ONLY valid JSON format with NO markdown formatting, NO backticks, and NO conversational text.
@@ -25,13 +25,12 @@ Focus areas based on user context: {user_description}
 {text[:25000]}"""
 
     response = client.chat.completions.create(
-        model="openai/gpt-oss-120b",
+        model="llama3-70b-8192",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.2,
-        response_format={"type": "json_object"} if hasattr(client.chat.completions, "response_format") else None
+        temperature=0.2
     )
 
     raw_response = response.choices[0].message.content.strip()
@@ -48,7 +47,6 @@ Focus areas based on user context: {user_description}
     elif isinstance(data, list):
         return data
     else:
-        # Fallback dictionary key extract
         for v in data.values():
             if isinstance(v, list):
                 return v
