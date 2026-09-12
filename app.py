@@ -26,7 +26,7 @@ if "user_answers" not in st.session_state:
 # Sidebar Configuration
 with st.sidebar:
     st.title("📄 PDF Reader & Analyzer")
-    st.markdown("Powered by **Groq LPU** & **Streamlit**")
+    st.markdown("Made by **Younas Ali** AI Engineer")
     
     uploaded_file = st.file_uploader("Upload PDF Document", type=["pdf"])
     user_description = st.text_area(
