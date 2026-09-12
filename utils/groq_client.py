@@ -1,10 +1,18 @@
 import os
+import streamlit as st
 from groq import Groq
 
 def get_groq_client(api_key: str = None) -> Groq:
-    key = api_key or os.environ.get("GROQ_API_KEY")
+    # Check manual UI input -> Streamlit Secrets -> Local environment
+    key = (
+        api_key 
+        or st.secrets.get("GROQ_API_KEY") 
+        or os.environ.get("GROQ_API_KEY")
+    )
+    
     if not key:
-        raise ValueError("Groq API key not provided or found in environment variables.")
+        raise ValueError("Groq API Key not found. Please add GROQ_API_KEY to Streamlit Secrets or sidebar.")
+        
     return Groq(api_key=key)
 
 def generate_analysis(text: str, user_description: str, mode: str, api_key: str = None) -> str:
