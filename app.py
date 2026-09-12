@@ -23,7 +23,7 @@ if "quiz_data" not in st.session_state:
 if "user_answers" not in st.session_state:
     st.session_state.user_answers = {}
 
-# Sidebar Configuration (API key text input completely removed)
+# Sidebar Configuration
 with st.sidebar:
     st.title("📄 PDF Reader & Analyzer")
     st.markdown("Powered by **Groq LPU** & **Streamlit**")
@@ -54,7 +54,7 @@ if not st.session_state.pdf_text:
 else:
     tab1, tab2, tab3, tab4 = st.tabs(["📝 Executive Summary", "🔍 Skimming", "🎯 Scanning", "❓ Quiz Mode"])
     
-    # Summary Tab
+    # Executive Summary Tab
     with tab1:
         st.header("Executive Summary")
         if not st.session_state.summary:
@@ -126,10 +126,8 @@ else:
                         if user_ans == correct_ans:
                             score += 1
                             st.success(f"**Q{idx+1}: Correct!** ({user_ans})")
-                      else:
+                        else:
                             st.error(f"**Q{idx+1}: Incorrect.** Your answer: {user_ans} | Correct answer: {correct_ans}")
                         st.caption(f"*Explanation:* {q.get('explanation', 'N/A')}")
-                    
-                    st.metric("Final Score", f"{score} / {total}", f"{int((score/total)*100)}%")
                     
                     st.metric("Final Score", f"{score} / {total}", f"{int((score/total)*100)}%")
