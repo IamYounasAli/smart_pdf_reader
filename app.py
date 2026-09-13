@@ -1,3 +1,4 @@
+from utils.pdf_generator import create_summary_pdf
 import streamlit as st
 from utils.pdf_processor import extract_text_from_pdf
 from utils.groq_client import generate_analysis
@@ -56,15 +57,24 @@ else:
     
     # Executive Summary Tab
     with tab1:
-        st.header("Executive Summary")
-        if not st.session_state.summary:
-            if st.button("Generate Summary"):
-                with st.spinner("Generating summary via Groq..."):
-                    st.session_state.summary = generate_analysis(
-                        st.session_state.pdf_text, user_description, "summary"
-                    )
-        if st.session_state.summary:
-            st.markdown(st.session_state.summary)
+    st.header("Executive Summary")
+    if not st.session_state.summary:
+        if st.button("Generate Summary"):
+            with st.spinner("Generating summary via Groq..."):
+                st.session_state.summary = generate_analysis(
+                    st.session_state.pdf_text, user_description, "summary"
+                )
+    if st.session_state.summary:
+        st.markdown(st.session_state.summary)
+        
+        # Add PDF download button
+        pdf_data = create_summary_pdf(st.session_state.summary, "Executive Summary Report")
+        st.download_button(
+            label="📥 Download Summary as PDF",
+            data=pdf_data,
+            file_name="executive_summary.pdf",
+            mime="application/pdf"
+        )
 
     # Skimming Tab
     with tab2:
