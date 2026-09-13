@@ -2,3 +2,5 @@ streamlit>=1.32.0
 groq>=0.4.2
 pypdf>=4.0.0
 python-dotenv>=1.0.0
+reportlab>=4.0.0
+
